@@ -5,11 +5,12 @@ const movies = require('./moviedex.json');
 const cors = require('cors');
 const helmet = require('helmet');
 
-console.log(process.env.API_TOKEN)
 
 const app = express();
 
-app.use(morgan('dev'));
+const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common';
+
+app.use(morgan(morganSetting));
 app.use(cors());
 app.use(helmet());
 
@@ -50,8 +51,19 @@ function handleGetMovie(req, res){
 
 app.get('/movie', handleGetMovie);
 
-const PORT = 9000;
+app.use((error, req, res, next) => {
+    let response
+    if(process.env.NODE_ENV === 'production'){
+        response = { error: { message: 'server error' }}
+    } else {
+        response = { error }
+    }
+
+    res.status(500).json(response)
+})
+
+const PORT = process.env.PORT || 9000;
 
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`)
+    
 })

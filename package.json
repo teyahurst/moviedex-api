@@ -8,6 +8,9 @@
     "dev": "nodemon server"
   },
   "keywords": [],
+  "engines": {
+    "node": "14.16.1"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
